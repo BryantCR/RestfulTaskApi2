@@ -1,79 +1,89 @@
-var mongoose = require("mongoose");
-var Task = mongoose.model("Task");
+const {PersonModel} = require('./../models/ApiModel');
 
-module.exports = {
+const PersonController = {
 
-    home: function(req, res){
-        Task.find({}, function(err, task){
-            if(err){
-                res.json({message: "Error!", error: err});
-            }
-            else{
-                res.json({message: "Success!", task: task});
-            }
-        })
-    },
-
-    details: function(req, res){
-        let id = req.params.id;
-        Task.find({_id: id},function(err, task){
-            if(err){
-                res.json({message: "Error!", error: err});
-            }
-            else{
-                res.json({message: "Success!", task: task});
-            }
-        })
-    },
-
-    addTask: function(req, res){
-        Task.create({title: req.body.title, description: req.body.description, completed: req.body.completed}, function(err, task){
-            if(err){
-                res.json({message: "Error!", error: err});
-            }
-            else{
-                res.json({message: "Success!", added: true});
-            }
-        })
-    },
-
-    editTask: function(req, res){
-        let id = req.params.id;
-        Task.findById(id, function(err, task){
-            if(err){
-                res.json({message: "Error!", error: err});
-            }
-            else{
-                if(req.body.title){
-                    task.title = req.body.title;
-                }
-                if(req.body.description){
-                    task.description = req.body.description;
-                }
-                if(req.params.completed){
-                    task.completed = req.body.completed;
-            }
-            task.save(function(err){
-                if(err){
-                    res.json({message: "Error!", error: err});
-                }
-                else{
-                    res.json({message: "Success!", task: task})
+    allPeople: function(req, response){
+    PersonModel
+        .getAllNames()
+        .then( data => {
+            let people = data.map(person => {
+                console.log( person );
+                return {
+                    person: person.name,
+                    created_at: person.created_at,
+                    updated_at: person.updated_at
                 }
             })
-            }
+        console.log( people );
+        response.status( 200 ).json( people );
+        })
+        .catch( err => {
+            console.log( "Something went wrong!" );
+            console.log( err );
+            response.json( err );
         })
     },
 
-    deleteTask: function(req, res){
-        let id = req.params.id;
-        Task.remove({_id: id},function(err){
-            if(err){
-                res.json({message: "Error!", error: err});
+    addPerson: function(request, response){
+
+        let name = request.params.name;
+        let created_at = new Date();
+        let updated_at = new Date();
+
+        if(name){
+            newName = {
+                name,
+                created_at,
+                updated_at
             }
-            else{
-                res.json({message: "Success!", removed: true});
-            }
-        })
-    }
+
+            console.log(newName);
+
+            PersonModel
+                .createPerson( newName )
+                .then( result => {
+                    response.status( 201 ).json( result );
+                });
+        }
+        else{
+            response.statusMessage = "You are missing a field to create a new user ('userName')";
+            response.status( 406 ).end();
+        }  
+    },
+
+    findByName : function (request,response) {
+        let name = request.params.name;
+        console.log("HERE", name);
+
+        PersonModel
+            .getPersonByName(name)
+            .then( names => {
+                let name = names
+                console.log("HERE", name);
+                response.status( 200 ).json( name );
+            })
+    },
+
+    removePerson : function(request, response){
+        let name = request.params.name;
+        console.log("HERE222 :", name);
+
+        PersonModel
+            .getPersonByName( name )
+            .then( result => {
+                if( result === null ){
+                    console.log( "Something went wrong!" );
+                }
+                else{
+                    PersonModel
+                        .delete( name )
+                        .then( result => {
+                            response.status( 204 ).end();
+                        });
+                }
+            })
+    },
+
 }
+
+module.exports = {PersonController};
