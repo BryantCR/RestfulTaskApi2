@@ -9,10 +9,10 @@ ApiRouter
 ApiRouter
     .post('/tasks', TaskController.addTask);
 ApiRouter
-    .get('/remove/:name', TaskController.removePerson );
+    .delete('/remove/:title', TaskController.removeTask );
 ApiRouter
     .get('/tasks/:title', TaskController.findByName );
 ApiRouter
-    .get('/taskss/:id2', TaskController.update );
+    .put('/taskss/:title', TaskController.update );
 
 module.exports = {ApiRouter}

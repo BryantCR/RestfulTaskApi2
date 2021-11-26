@@ -71,12 +71,12 @@ const TaskController = {
             })
     },
 
-    removePerson : function(request, response){
+    removeTask : function(request, response){
         let title = request.params.title;
         console.log("HERE222 :", title);
 
         TaskModel
-            .getPersonByName( title )
+            .getTaskByName( title )
             .then( result => {
                 if( result === null ){
                     console.log( "Something went wrong!" );
@@ -92,24 +92,40 @@ const TaskController = {
     },
 
     update : function(request, response) {
-        let id2 = request.params.id2;
-        console.log("Success L1 :", id2);
+        let title = request.params.title;
+        console.log("Success L1 :", title);
 
         TaskModel
-            .updateTask( id2 )
+            .getTaskByName(title)
             .then(result => {
                 if( result === null ){
                     console.log( "Something went wrong!" );
                     response.json({message: "Error!", error: err});
                 }
                 else {
-                    return {
-                        title: result.title,
-                        description : result.description,
-                        completed : result.completed,
-                        created_at : result.created_at,
-                        updated_at : result.updated_at
+                    let task = result;
+                    console.log("HERE", task);
+                    response.status( 200 ).json( {message: "Success!", task : task} );
+                    if(task.title === request.body.title){
+                        response.json({message: "Error!", error: err});
                     }
+                    if(request.body.title){
+                        task.title = request.body.title;
+                    }
+                    if(request.body.description){
+                        task.description = request.body.description;
+                    }
+                    if(request.params.completed){
+                        task.completed = request.body.completed;
+                    }
+                    task.save(function(err){
+                        if(err){
+                            res.json({message: "Error!", error: err});
+                        }
+                        else{
+                            res.json({message: "Success!", task: task})
+                        }
+                    })
                 }
             })
             

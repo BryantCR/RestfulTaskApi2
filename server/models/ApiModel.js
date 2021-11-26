@@ -39,11 +39,11 @@ const TaskModel = {
     getTaskByName : function( title ){
         return Task.findOne({ title });
     },
-    delete : function( name ){
-        return Task.remove({ name });
+    delete : function( title ){
+        return Task.deleteOne({ title });
     },
-    updateTask : function( id2 ){
-        return Task.findById({ id2 });
+    updateTask: function(id, data){
+        return Task.findOneAndUpdate({id:id},{$set:data})
     }
 };
 
