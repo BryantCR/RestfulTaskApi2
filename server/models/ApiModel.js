@@ -26,7 +26,7 @@ const taskSchema = new mongoose.Schema({
         type : Date,
     }
 });
-taskSchema.plugin(AutoIncrement, {inc_field: 'users_id'});
+taskSchema.plugin(AutoIncrement, {inc_field: 'task_id'});
 const Task = mongoose.model("tasks", taskSchema);
 
 const TaskModel = {
@@ -42,8 +42,8 @@ const TaskModel = {
     delete : function( name ){
         return Task.remove({ name });
     },
-    updateTask : function( id ){
-        return Task.findById( id );
+    updateTask : function( id2 ){
+        return Task.findById({ id2 });
     }
 };
 

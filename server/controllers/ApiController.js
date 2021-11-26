@@ -14,7 +14,8 @@ const TaskController = {
                     description : tasks.description,
                     completed : tasks.completed,
                     created_at : tasks.created_at,
-                    updated_at : tasks.updated_at
+                    updated_at : tasks.updated_at,
+                    id2: tasks.task_id
                 }
             })
         console.log( task );
@@ -91,11 +92,11 @@ const TaskController = {
     },
 
     update : function(request, response) {
-        let id = request.params.id;
-        console.log("Success L1 :", id);
+        let id2 = request.params.id2;
+        console.log("Success L1 :", id2);
 
         TaskModel
-            .updateTask( id )
+            .updateTask( id2 )
             .then(result => {
                 if( result === null ){
                     console.log( "Something went wrong!" );
