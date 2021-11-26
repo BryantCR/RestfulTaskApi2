@@ -40,6 +40,9 @@ const TaskModel = {
     },
     delete : function( name ){
         return Task.remove({ name });
+    },
+    updateTask : function( id ){
+        return Task.findOne({ id });
     }
 };
 

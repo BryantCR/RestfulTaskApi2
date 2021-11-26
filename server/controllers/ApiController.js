@@ -90,13 +90,28 @@ const TaskController = {
     },
 
     update : function(request, response) {
-        let title = request.params.title;
+        let id = request.params.id;
 
         TaskModel
-            .findByIdAndUpdate( title )
-            .then(task => response.json(task))
-            .catch(errorHandler.bind(response));
-    },
+            .updateTask( id )
+            .then(result => {
+                if( result === null ){
+                    console.log( "Something went wrong!" );
+                    response.json({message: "Error!", error: err});
+                }
+                else {
+                    return {
+                        title: result.title,
+                        description : result.description,
+                        completed : result.completed,
+                        created_at : result.created_at,
+                        updated_at : result.updated_at
+                    }
+                }
+            }
+            
+    } 
+    
 }
 
 module.exports = {TaskController};

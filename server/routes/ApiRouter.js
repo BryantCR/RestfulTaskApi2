@@ -12,6 +12,7 @@ ApiRouter
     .get('/remove/:name', TaskController.removePerson );
 ApiRouter
     .get('/tasks/:title', TaskController.findByName );
-
+ApiRouter
+    .put('/tasks/:id', TaskController.findByName );
 
 module.exports = {ApiRouter}
