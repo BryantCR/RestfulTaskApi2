@@ -1,21 +1,23 @@
-const {PersonModel} = require('./../models/ApiModel');
+const {TaskModel} = require('./../models/ApiModel');
 
-const PersonController = {
+const TaskController = {
 
-    allPeople: function(req, response){
-    PersonModel
-        .getAllNames()
+    allTasks: function(req, response){
+        TaskModel
+        .getAllTasks()
         .then( data => {
-            let people = data.map(person => {
-                console.log( person );
+            let task = data.map(tasks => {
+                console.log( tasks );
                 return {
-                    person: person.name,
-                    created_at: person.created_at,
-                    updated_at: person.updated_at
+                    title: tasks.title,
+                    description : tasks.description,
+                    completed : tasks.completed,
+                    created_at : tasks.created_at,
+                    updated_at : tasks.updated_at
                 }
             })
-        console.log( people );
-        response.status( 200 ).json( people );
+        console.log( task );
+        response.status( 200 ).json( {message: "Success!", task: task} );
         })
         .catch( err => {
             console.log( "Something went wrong!" );
@@ -24,59 +26,62 @@ const PersonController = {
         })
     },
 
-    addPerson: function(request, response){
+    addTask: function(request, response){
 
-        let name = request.params.name;
+        let title = request.body.title;
+        let description = request.body.description;
+        let completed = request.body.completed;
         let created_at = new Date();
         let updated_at = new Date();
 
-        if(name){
-            newName = {
-                name,
+        if(title){
+            newTask = {
+                title,
+                description,
+                completed,
                 created_at,
                 updated_at
             }
+            console.log("New task info: ", newTask);
 
-            console.log(newName);
-
-            PersonModel
-                .createPerson( newName )
+            TaskModel
+                .createTask( newTask )
                 .then( result => {
-                    response.status( 201 ).json( result );
+                    response.status( 201 ).json( {message: "Success!", added: true, task: result } );
                 });
         }
         else{
-            response.statusMessage = "You are missing a field to create a new user ('userName')";
+            response.statusMessage = "You are missing a field to create a new task ('title')";
             response.status( 406 ).end();
         }  
     },
 
-    findByName : function (request,response) {
-        let name = request.params.name;
-        console.log("HERE", name);
+    findByName : function ( request, response ) {
+        let title = request.params.title;
+        console.log("HERE", title);
 
-        PersonModel
-            .getPersonByName(name)
-            .then( names => {
-                let name = names
-                console.log("HERE", name);
-                response.status( 200 ).json( name );
+        TaskModel
+            .getTaskByName(title)
+            .then( titles => {
+                let task = titles
+                console.log("HERE", task);
+                response.status( 200 ).json( {message: "Success!", task : task} );
             })
     },
 
     removePerson : function(request, response){
-        let name = request.params.name;
-        console.log("HERE222 :", name);
+        let title = request.params.title;
+        console.log("HERE222 :", title);
 
-        PersonModel
-            .getPersonByName( name )
+        TaskModel
+            .getPersonByName( title )
             .then( result => {
                 if( result === null ){
                     console.log( "Something went wrong!" );
                 }
                 else{
-                    PersonModel
-                        .delete( name )
+                    TaskModel
+                        .delete( title )
                         .then( result => {
                             response.status( 204 ).end();
                         });
@@ -84,6 +89,16 @@ const PersonController = {
             })
     },
 
+    update : function(request, response) {
+        let title = request.params.title;
+
+        TaskModel
+            .findByIdAndUpdate( title )
+            .then(task => response.json(task))
+            .catch(errorHandler.bind(response));
+    },
 }
 
-module.exports = {PersonController};
+module.exports = {TaskController};
+
+//----------------------------------------------------dadaaad

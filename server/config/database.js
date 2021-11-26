@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/api_names_db', {useNewUrlParser: true});
+mongoose.connect('mongodb://localhost/api_tasks_db', {useNewUrlParser: true});
 
 mongoose.connection.on('error', err => {
     console.error(`Mongoose default connection error: ${ err }`);

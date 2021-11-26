@@ -1,17 +1,17 @@
 const express = require("express");
 const { get } = require("http");
 const ApiRouter = express.Router();
-const {PersonController} = require('./../controllers/ApiController');
+const {TaskController} = require('./../controllers/ApiController');
 
 
 ApiRouter
-    .get( '/', PersonController.allPeople );
+    .get( '/tasks', TaskController.allTasks );
 ApiRouter
-    .get('/new/:name', PersonController.addPerson);
+    .post('/tasks', TaskController.addTask);
 ApiRouter
-    .get('/remove/:name', PersonController.removePerson );
+    .get('/remove/:name', TaskController.removePerson );
 ApiRouter
-    .get('/:name', PersonController.findByName );
+    .get('/tasks/:title', TaskController.findByName );
 
 
 module.exports = {ApiRouter}

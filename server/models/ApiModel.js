@@ -1,10 +1,22 @@
-var mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-var PeopleSchema = new mongoose.Schema({
-    name : {
-        type: String,
-        required: true,
-        minlength: 3
+const taskSchema = new mongoose.Schema({
+    title: {
+    type: String,
+    trim: true,
+    required: [true, 'Task title is required'],
+    minlength: [5, 'Task title length must be greater than 5'],
+    unique: true
+    },
+    description: {
+    type: String,
+    trim: true,
+    default: ''
+    },
+    completed: {
+    type: Boolean,
+    required: true,
+    default: false
     },
     created_at : {
         type : Date,
@@ -14,21 +26,21 @@ var PeopleSchema = new mongoose.Schema({
     }
 });
 
-const Person = mongoose.model("peoples", PeopleSchema);
+const Task = mongoose.model("tasks", taskSchema);
 
-const PersonModel = {
-    createPerson : function( newName ){
-        return Person.create( newName );
+const TaskModel = {
+    createTask : function( newTask ){
+        return Task.create( newTask );
     },
-    getAllNames : function(){
-        return Person.find();
+    getAllTasks : function(){
+        return Task.find();
     },
-    getPersonByName : function( name ){
-        return Person.findOne({ name });
+    getTaskByName : function( title ){
+        return Task.findOne({ title });
     },
     delete : function( name ){
-        return Person.remove({ name });
+        return Task.remove({ name });
     }
 };
 
-module.exports = {PersonModel};
+module.exports = {TaskModel};
