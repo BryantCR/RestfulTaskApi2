@@ -9,6 +9,7 @@ const TaskController = {
             let task = data.map(tasks => {
                 console.log( tasks );
                 return {
+                    id: tasks._id,
                     title: tasks.title,
                     description : tasks.description,
                     completed : tasks.completed,
@@ -91,6 +92,7 @@ const TaskController = {
 
     update : function(request, response) {
         let id = request.params.id;
+        console.log("Success L1 :", id);
 
         TaskModel
             .updateTask( id )
@@ -108,9 +110,9 @@ const TaskController = {
                         updated_at : result.updated_at
                     }
                 }
-            }
+            })
             
-    } 
+    }
     
 }
 

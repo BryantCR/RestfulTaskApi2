@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose); // Auto-Increment
 
 const taskSchema = new mongoose.Schema({
     title: {
@@ -25,7 +26,7 @@ const taskSchema = new mongoose.Schema({
         type : Date,
     }
 });
-
+taskSchema.plugin(AutoIncrement, {inc_field: 'users_id'});
 const Task = mongoose.model("tasks", taskSchema);
 
 const TaskModel = {
@@ -42,7 +43,7 @@ const TaskModel = {
         return Task.remove({ name });
     },
     updateTask : function( id ){
-        return Task.findOne({ id });
+        return Task.findById( id );
     }
 };
 

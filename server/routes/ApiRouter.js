@@ -13,6 +13,6 @@ ApiRouter
 ApiRouter
     .get('/tasks/:title', TaskController.findByName );
 ApiRouter
-    .put('/tasks/:id', TaskController.findByName );
+    .get('/taskss/:id', TaskController.update );
 
 module.exports = {ApiRouter}
